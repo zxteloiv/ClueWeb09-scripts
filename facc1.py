@@ -3,7 +3,7 @@
 
 import sys
 
-sys.path.insert(1, ("/home/zxteloiv/.local/lib/python2.7/site-packages/warc-0.2.0-py2.7.egg"))
+sys.path.insert(1, ("./warc-clueweb"))
 sys.path.insert(2, ("/home/zxteloiv/local/python27/lib/python2.7/site-packages"))
 sys.path.insert(3, ("/home/zxteloiv/.local/lib/python2.7/site-packages"))
 sys.path.insert(4, ("/home/zxteloiv/local/python27/lib/python27.zip"))
