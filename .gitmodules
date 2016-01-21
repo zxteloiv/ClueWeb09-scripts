@@ -1,0 +1,3 @@
+[submodule "warc-clueweb"]
+	path = warc-clueweb
+	url = https://github.com/zxteloiv/warc-clueweb
