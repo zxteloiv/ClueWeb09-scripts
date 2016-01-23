@@ -145,8 +145,10 @@ def output_html(trec_id, html_data):
 
 def output_sentences(trec_id, sentences):
     global HTML_SAVE_PATH
-    fout = open(HTML_SAVE_PATH + '/' + trec_id + '.sentences.txt', 'wb')
+    fout = open(HTML_SAVE_PATH + '/' + trec_id + '.sentences.html', 'wb')
+    fout.write('<html><head><meta charset="utf-8"><title>%s</title></head><body>' % str(trec_id))
     fout.write(u'<br/>\n------------------------------<br/>\n'.join(sentences).encode('utf-8'))
+    fout.write('</body></html>')
     fout.close()
 
 if __name__ == "__main__":
