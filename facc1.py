@@ -21,27 +21,35 @@ def process_facc1_with_filename(facc1file, cluewebfile):
 def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr=sys.stderr):
     nlpobj = tp.init_CoreNLPServer()
     record = clueweb_obj.read_record()
+    entity_set = set()
 
     for line in facc1_obj:
         (trec_id, encoding, entity_name, entity_start, entity_end, _, __,
                 freebase_id) = line.strip().split('\t')
 
-        #_, directory, section, record_id = trec_id.strip().split('-')
-
         # We can iterate over the facc1 file along the clueweb09 file, because
         # these files are all organized linearly and ordered by the WARC-TREC-ID.
         while 'warc-trec-id' not in record or record['warc-trec-id'] != trec_id:
             record = clueweb_obj.read_record()
-        else:
-            try:
+            is_a_new_record = True
+
+        try:
+            if is_a_new_record:
+                is_a_new_record = False
                 html_data = tp.preprocess(record.payload)
 
+                # each time a new html file is parsed, a new entity_set must be presented.
+                entity_set.clear()
+
                 sentences = tp.get_sentences_from_html(html_data, nlpobj)
-                #tp.output_html(trec_id, html_data)
-                #tp.output_sentences(trec_id, sentences)
-            except:
-                logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data))) + "\n")
-                continue
+        except:
+            logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data))) + "\n")
+            continue
+
+        if freebase_id in entity_set:
+            continue
+        else:
+            entity_set.add(freebase_id)
 
         # take the longest sentence from those the entity exists
         try:
