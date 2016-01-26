@@ -54,8 +54,6 @@ class FiniteStateAutomata(object):
                 else:
                     pass
 
-        pass
-
 if __name__ == "__main__":
     states = {
             "start": {
