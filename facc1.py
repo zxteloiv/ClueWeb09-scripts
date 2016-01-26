@@ -40,7 +40,8 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
                 #tp.output_html(trec_id, html_data)
                 #tp.output_sentences(trec_id, sentences)
             except:
-                logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data)) + "\n")
+                logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data))) + "\n")
+                continue
 
         # take the longest sentence from those the entity exists
         try:

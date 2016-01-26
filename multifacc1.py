@@ -40,7 +40,7 @@ def worker(pid, pnum, facc1tgz, clueweb_path):
         logerr.close()
 
 def multifacc1(facc1tgz, clueweb_path):
-    PROCESS_NUM = 8
+    PROCESS_NUM = 16
     process_list = [multiprocessing.Process(target=worker, args=(i, PROCESS_NUM, facc1tgz, clueweb_path))
             for i in xrange(PROCESS_NUM)]
 
