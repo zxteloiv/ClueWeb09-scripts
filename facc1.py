@@ -22,6 +22,7 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
     nlpobj = tp.init_CoreNLPServer()
     record = clueweb_obj.read_record()
     entity_set = set()
+    is_a_new_record = True
 
     for line in facc1_obj:
         (trec_id, encoding, entity_name, entity_start, entity_end, _, __,
@@ -66,5 +67,5 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         process_facc1_with_filename(sys.argv[1], sys.argv[2])
     else:
-        print "Usage: %s <facc1 file> <annote file>" % sys.argv[0]
+        print "Usage: %s <facc1 file> <clueweb file>" % sys.argv[0]
 

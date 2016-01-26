@@ -64,16 +64,16 @@ def get_sentences_from_html(html, nlp=None):
     paras = text.splitlines()
 
     # substitute all non-breaking space to normal space
-    paras = [re.sub(u'\xa0', ' ', p) for p in paras]
+    paras = (re.sub(u'\xa0', ' ', p) for p in paras)
     # discard comment
-    paras = [p for p in paras if not (re.match(r'^[\r\n\t ]*<!--', p))]
-    paras = [re.sub(r'<!--[^>]+-->', u' ', p) for p in paras]
+    paras = (p for p in paras if not (re.match(r'^[\r\n\t ]*<!--', p)))
+    paras = (re.sub(r'<!--[^>]+-->', u' ', p) for p in paras)
     # substitute continuous blanks
-    paras = [re.sub(r'\t+', u'\t', p) for p in paras]
-    paras = [re.sub(r'[\r\n]+', u'\n', p) for p in paras]
-    paras = [re.sub(r'  +', u' ', p) for p in paras]
+    paras = (re.sub(r'\t+', u'\t', p) for p in paras)
+    paras = (re.sub(r'[\r\n]+', u'\n', p) for p in paras)
+    paras = (re.sub(r'  +', u' ', p) for p in paras)
     # discard empty string
-    paras = [p.strip() for p in paras if len(p.strip()) > 0]
+    paras = (p.strip() for p in paras if len(p.strip()) > 0)
 
     # analyze sentence in a paragraph
     sentences = list(s for s in nlp_analyze("\n".join(p for p in paras), nlp))
