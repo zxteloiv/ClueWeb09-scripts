@@ -42,7 +42,10 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
                 # each time a new html file is parsed, a new entity_set must be presented.
                 entity_set.clear()
 
-                sentences = tp.get_sentences_from_html(html_data, nlpobj)
+                sentences = tp.get_sentences_from_html_v2(html_data, nlpobj)
+                tp.output_html(trec_id, html_data)
+                tp.output_sentences(trec_id, sentences)
+
         except:
             logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data))) + "\n")
             continue

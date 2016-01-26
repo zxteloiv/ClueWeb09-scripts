@@ -80,6 +80,30 @@ def get_sentences_from_html(html, nlp=None):
 
     return sentences
 
+def get_sentences_from_html_v2(html, nlp=None):
+    # clear new line and tab
+    html = re.sub(r'[\r\n\t]', ' ', html.strip())
+
+    # discard script tag and style tag
+    html = re.sub(r'(?is)<(script|style).*?>.*?</\1>', ' ', html) 
+
+    # discard comment
+    html = re.sub(r'(?s)<!--.*?-->', ' ', html)
+
+    # html entities replacement
+    html = re.sub(r'&nbsp;', ' ', html)
+
+    # substitute continuous blanks
+    html = re.sub(r'  +', ' ', html)
+
+    # get raw paragraphs
+    html = re.sub(r'(?s)<.*?>', '\n', html)
+    paras = re.sub(r' *\n( *\n)+', '\n', html)
+
+    sentences = list(s for s in nlp_analyze(paras, nlp))
+
+    return sentences
+
 def output_html(trec_id, html_data):
     global HTML_SAVE_PATH
     fout =  open('/'.join((HTML_SAVE_PATH, trec_id + ".html")), 'wb')
@@ -93,4 +117,9 @@ def output_sentences(trec_id, sentences):
     fout.write(u'<br/>\n------------------------------<br/>\n'.join(sentences).encode('utf-8'))
     fout.write('</body></html>')
     fout.close()
+
+if __name__ == "__main__":
+    import sys
+    nlp = init_CoreNLPServer()
+    print "\n------------------------\n".join(get_sentences_from_html_v2(open(sys.argv[1]).read(), nlp))
 
