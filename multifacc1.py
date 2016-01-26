@@ -30,8 +30,9 @@ def worker(pid, pnum, facc1tgz, clueweb_path):
 
         facc1_obj = tar.extractfile(member)
 
-        logout = open(LOGGER_PATH + '/log.' + str(pid) + '.out', 'wb')
-        logerr = open(LOGGER_PATH + '/log.' + str(pid) + '.err', 'wb')
+        uniqkey = '-'.join((section, filename, 'entity-sentence'))
+        logout = open(LOGGER_PATH + '/' + uniqkey + '.out', 'wb')
+        logerr = open(LOGGER_PATH + '/' + uniqkey + '.err', 'wb')
 
         facc1.process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=logout, logerr=logerr)
 
@@ -39,7 +40,7 @@ def worker(pid, pnum, facc1tgz, clueweb_path):
         logerr.close()
 
 def multifacc1(facc1tgz, clueweb_path):
-    PROCESS_NUM = 2
+    PROCESS_NUM = 8
     process_list = [multiprocessing.Process(target=worker, args=(i, PROCESS_NUM, facc1tgz, clueweb_path))
             for i in xrange(PROCESS_NUM)]
 

@@ -17,7 +17,7 @@ def init_CoreNLPServer():
 
 def preprocess(html_text):
     # discard html headers
-    html_text = re.sub('^HTTP[^<]*(<)', r'\1', html_text, flags=re.DOTALL)
+    html_text = re.sub('^HTTP[^<]*<', '<', html_text, flags=re.DOTALL)
 
     # discard possible comments in raw html
     html_text = re.sub(r'<!--(.*?)-->', ' ', html_text, flags=re.DOTALL)
@@ -52,7 +52,7 @@ def nlp_analyze(text, nlp=None):
         yield sentence
 
 def get_sentences_from_html(html, nlp=None):
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'lxml')
 
     # discard script and css style tag
     for tag in soup(['script', 'style']):

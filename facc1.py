@@ -33,11 +33,14 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
         while 'warc-trec-id' not in record or record['warc-trec-id'] != trec_id:
             record = clueweb_obj.read_record()
         else:
-            html_data = tp.preprocess(record.payload)
+            try:
+                html_data = tp.preprocess(record.payload)
 
-            sentences = tp.get_sentences_from_html(html_data, nlpobj)
-            #tp.output_html(trec_id, html_data)
-            #tp.output_sentences(trec_id, sentences)
+                sentences = tp.get_sentences_from_html(html_data, nlpobj)
+                #tp.output_html(trec_id, html_data)
+                #tp.output_sentences(trec_id, sentences)
+            except:
+                logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data)) + "\n")
 
         # take the longest sentence from those the entity exists
         try:
