@@ -6,6 +6,7 @@
 *.tgz
 *.tsv
 *.tmp
+*.swp
 
 *bak
 .idea
