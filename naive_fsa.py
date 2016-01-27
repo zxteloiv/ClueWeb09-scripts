@@ -168,7 +168,7 @@ if __name__ == "__main__":
  
     html = "aefgef3"
     print "length of", html, "is", len(html)
-    print "match '%s' status:" % html, "\n", fsa.match(html, 0)
+    print "match '%s' status:" % html, fsa.match(html, 0)
 
     html = "hello aefgef3ooo"
     print "length of", html, "is", len(html)
