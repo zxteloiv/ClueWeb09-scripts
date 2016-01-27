@@ -118,7 +118,7 @@ class FiniteStateAutomata(object):
                             return (True, match.end())
                         break
 
-                elif start_pos == sequence.find(symbol, start_pos):
+                elif sequence.startswith(symbol, start_pos):
                     # common string
                     self._transfer_to(target)
                     return (True, start_pos + len(symbol))
@@ -140,7 +140,7 @@ class FiniteStateAutomata(object):
 if __name__ == "__main__":
     states = {
             "start": {
-                # a state without "default" stays there if no known symbol is encountered
+                # a state without "default" doesn't match anything if no known symbol is encountered
                 "trans": [('a', 'first'), ('b', 'second')],
                 },
             "first": {
