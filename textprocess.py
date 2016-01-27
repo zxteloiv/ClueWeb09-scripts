@@ -36,7 +36,7 @@ def nlp_analyze(text, nlp=None):
 
     # annotators must be set, otherwise the returned data will not be a struct in json.
     # Currently encoding problems reside, making the text to send not be in unicode.
-    output = nlp.annotate(text.encode('utf-8'),
+    output = nlp.annotate(text,
             properties={'annotators':'tokenize,ssplit,pos', 'outputFormat':'json'})
 
     # do NOT take line feed or carriage return into a sentence
@@ -77,7 +77,7 @@ def get_sentences_from_html(html, nlp=None):
     paras = (p.strip() for p in paras if len(p.strip()) > 0)
 
     # analyze sentence in a paragraph
-    sentences = list(s for s in nlp_analyze("\n".join(p for p in paras), nlp))
+    sentences = list(s for s in nlp_analyze(u"\n".join(p for p in paras).encode('utf-8'), nlp))
 
     return sentences
 
