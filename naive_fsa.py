@@ -148,7 +148,7 @@ if __name__ == "__main__":
                 "trans": [(re.compile('ef'), 'second')]
                 },
             "second": {
-                # a state with "defaul" goes there if no known symbol is encountered
+                # a state with "default" goes there if no known symbol is encountered
                 "default": "first",
                 "trans": [('3', 'third')]
                 },
