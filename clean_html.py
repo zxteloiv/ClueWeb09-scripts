@@ -55,7 +55,7 @@ def sub_html_tag(sub, html):
     result, start, end = fsa.search(html)
     while result:
         html = html[:start] + str(sub) + html[end:]
-        result, start, end = fsa.search(html)
+        result, start, end = fsa.search(html, start)
 
     return html
 
