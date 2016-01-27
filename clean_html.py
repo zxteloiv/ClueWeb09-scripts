@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from naive_fsa import FiniteStateAutomata as FSA
+import re
 
 HTML_TAG_STATES = {
 
@@ -45,6 +46,44 @@ HTML_TAG_STATES = {
         "end": {}
 
         }
+
+HTML_FSA = FSA(HTML_TAG_STATES, start="start", end="end")
+
+def sub_html_tag(sub, html):
+    fsa = FSA(HTML_TAG_STATES, start="start", end="end")
+
+    result, start, end = fsa.search(html)
+    while result:
+        html = html[:start] + str(sub) + html[end:]
+        result, start, end = fsa.search(html)
+
+    return html
+
+def remove_html_tag(html):
+    sub_html_tag('', html)
+
+def clean_html(html):
+    # clear new line and tab
+    html = re.sub(r'[\r\n\t]', ' ', html.strip())
+
+    # discard script tag and style tag
+    html = re.sub(r'(?is)<(script|style).*?>.*?</\1>', ' ', html) 
+
+    # discard comment
+    html = re.sub(r'(?s)<!--.*?-->', ' ', html)
+
+    # html entities replacement
+    html = re.sub(r'&nbsp;', ' ', html)
+
+    # substitute continuous blanks
+    html = re.sub(r'  +', ' ', html)
+
+    # discard html tags
+    #html = re.sub(r'(?s)<.*?>', '\n', html)
+    html = sub_html_tag('\n', html)
+    html = re.sub(r' *\n( *\n)+', '\n', html)
+
+    return html
 
 if __name__ == "__main__":
     html = """

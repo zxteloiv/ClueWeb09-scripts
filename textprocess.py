@@ -4,6 +4,7 @@
 import re
 from bs4 import BeautifulSoup
 from pycorenlp import StanfordCoreNLP
+from clean_html import clean_html
 
 CORENLP_IP = '127.0.0.1'
 CORENLP_PORT = '9000'
@@ -81,25 +82,7 @@ def get_sentences_from_html(html, nlp=None):
     return sentences
 
 def get_sentences_from_html_v2(html, nlp=None):
-    # clear new line and tab
-    html = re.sub(r'[\r\n\t]', ' ', html.strip())
-
-    # discard script tag and style tag
-    html = re.sub(r'(?is)<(script|style).*?>.*?</\1>', ' ', html) 
-
-    # discard comment
-    html = re.sub(r'(?s)<!--.*?-->', ' ', html)
-
-    # html entities replacement
-    html = re.sub(r'&nbsp;', ' ', html)
-
-    # substitute continuous blanks
-    html = re.sub(r'  +', ' ', html)
-
-    # get raw paragraphs
-    html = re.sub(r'(?s)<.*?>', '\n', html)
-    paras = re.sub(r' *\n( *\n)+', '\n', html)
-
+    paras = clean_html(html)
     sentences = list(s for s in nlp_analyze(paras, nlp))
 
     return sentences
