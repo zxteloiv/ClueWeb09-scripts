@@ -30,9 +30,12 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
 
         # We can iterate over the facc1 file along the clueweb09 file, because
         # these files are all organized linearly and ordered by the WARC-TREC-ID.
-        while 'warc-trec-id' not in record or record['warc-trec-id'] != trec_id:
+        while record is not None and 'warc-trec-id' not in record or record['warc-trec-id'] != trec_id:
             record = clueweb_obj.read_record()
             is_a_new_record = True
+
+        if record is None:
+            break
 
         try:
             if is_a_new_record:
@@ -42,10 +45,14 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
                 # each time a new html file is parsed, a new entity_set must be presented.
                 entity_set.clear()
 
-                sentences = tp.get_sentences_from_html_v2(html_data, nlpobj)
-                tp.output_html(trec_id, html_data)
-                tp.output_sentences(trec_id, sentences)
+                #logerr.flush()
+                #logout.flush()
 
+                sentences = tp.get_sentences_from_html_v2(html_data, nlpobj)
+                #tp.output_html(trec_id, html_data)
+                #tp.output_sentences(trec_id, sentences)
+            else:
+                sentences = []
         except:
             logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data))) + "\n")
             continue
