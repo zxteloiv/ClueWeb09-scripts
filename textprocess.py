@@ -2,8 +2,7 @@
 # coding: utf-8
 
 import re
-from bs4 import BeautifulSoup
-from pycorenlp import StanfordCoreNLP
+from pycorenlp.corenlp import StanfordCoreNLP
 from clean_html import clean_html
 
 CORENLP_IP = '127.0.0.1'
@@ -53,6 +52,7 @@ def nlp_analyze(text, nlp=None):
         yield sentence
 
 def get_sentences_from_html(html, nlp=None):
+    from bs4 import BeautifulSoup
     soup = BeautifulSoup(html, 'lxml')
 
     # discard script and css style tag

@@ -1,3 +1,9 @@
 [submodule "warc-clueweb"]
 	path = warc-clueweb
 	url = https://github.com/zxteloiv/warc-clueweb
+[submodule "py-corenlp"]
+	path = py-corenlp
+	url = https://github.com/smilli/py-corenlp.git
+[submodule "requests"]
+	path = requests
+	url = https://github.com/kennethreitz/requests.git

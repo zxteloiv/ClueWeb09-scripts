@@ -3,7 +3,9 @@
 
 import sys
 
+sys.path.insert(1, ("./py-corenlp"))
 sys.path.insert(1, ("./warc-clueweb"))
+sys.path.insert(1, ("./requests"))
 
 import re
 import warc
@@ -53,7 +55,7 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
                 #tp.output_html(trec_id, html_data)
                 #tp.output_sentences(trec_id, sentences)
         except:
-            logerr.write("\t".join((line.strip(), re.sub(r'\r\n', '', html_data))) + "\n")
+            logerr.write("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))) + "\n")
             continue
 
         if freebase_id in entity_set:
@@ -65,7 +67,7 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
         try:
             sentence = max((s for s in sentences if entity_name in s), key=len)
         except ValueError:
-            logerr.write(line.strip() + "\n")
+            logerr.write(line.strip() + "\tentity_not_found\n")
             continue
 
         logout.write("\t".join(x for x in (
