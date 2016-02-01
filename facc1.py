@@ -6,9 +6,6 @@ import sys, os
 for lib in os.listdir('./lib'):
     sys.path.insert(1, lib)
 
-print sys.path
-sys.exit(0)
-
 import re
 import warc
 import textprocess as tp
