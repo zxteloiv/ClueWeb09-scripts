@@ -1,11 +1,13 @@
 #!/usr/bin/env python2
 # coding: utf-8
 
-import sys
+import sys, os
 
-sys.path.insert(1, ("./py-corenlp"))
-sys.path.insert(1, ("./warc-clueweb"))
-sys.path.insert(1, ("./requests"))
+for lib in os.listdir('./lib'):
+    sys.path.insert(1, lib)
+
+print sys.path
+sys.exit(0)
 
 import re
 import warc
