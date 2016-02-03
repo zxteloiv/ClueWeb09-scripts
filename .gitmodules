@@ -7,3 +7,6 @@
 [submodule "py-corenlp"]
 	path = lib/py-corenlp
 	url = https://github.com/smilli/py-corenlp.git
+[submodule "lib/py-xuxian"]
+	path = lib/py-xuxian
+	url = https://github.com/zxteloiv/py-xuxian.git
