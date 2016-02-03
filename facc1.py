@@ -4,26 +4,37 @@
 import sys, os
 
 for lib in os.listdir('./lib'):
-    sys.path.insert(1, lib)
+    sys.path.insert(1, './lib/' + lib)
 
 import re
 import warc
 import textprocess as tp
+import xuxian
 
-def process_facc1_with_filename(facc1file, cluewebfile):
-    facc1_obj = open(facc1file, 'rb')
-    clueweb_obj = warc.open(cluewebfile, 'rb')
+parser = xuxian.get_parser()
+parser.add_argument('--facc1-file', required=True)
+parser.add_argument('--clueweb-file', required=True)
+parser.add_argument('--output-file', required=True)
+parser.add_argument('--error-file', required=True)
+
+def process_facc1_with_filename(args):
+    facc1_obj = open(args.facc1_file, 'rb')
+    clueweb_obj = warc.open(args.clueweb_file, 'rb')
 
     process_facc1_with_fileobj(facc1_obj, clueweb_obj)
 
     facc1_obj.close()
     clueweb_obj.close()
 
-def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr=sys.stderr):
+def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
     nlpobj = tp.init_CoreNLPServer()
     record = clueweb_obj.read_record()
     entity_set = set()
     is_a_new_record = True
+
+    args = xuxian.get_args()
+    logout = xuxian.apply_dump_file('output', args.output_file)
+    logerr = xuxian.apply_dump_file('error', args.error_file)
 
     for line in facc1_obj:
         (trec_id, encoding, entity_name, entity_start, entity_end, _, __,
@@ -54,7 +65,7 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
                 #tp.output_html(trec_id, html_data)
                 #tp.output_sentences(trec_id, sentences)
         except:
-            logerr.write("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))) + "\n")
+            logerr.info("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))) + "\n")
             continue
 
         if freebase_id in entity_set:
@@ -66,16 +77,14 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj, logout=sys.stdout, logerr
         try:
             sentence = max((s for s in sentences if entity_name in s), key=len)
         except ValueError:
-            logerr.write(line.strip() + "\tentity_not_found\n")
+            logerr.info(line.strip() + "\tentity_not_found\n")
             continue
 
-        logout.write("\t".join(x for x in (
+        logout.info("\t".join(x for x in (
             trec_id, entity_name, freebase_id, re.sub(r'\t', u' ', sentence).encode('utf-8')
             )) + "\n")
 
 if __name__ == "__main__":
-    if len(sys.argv) == 3:
-        process_facc1_with_filename(sys.argv[1], sys.argv[2])
-    else:
-        print "Usage: %s <facc1 file> <clueweb file>" % sys.argv[0]
+    xuxian.parse_args()
+    xuxian.run(process_facc1_with_filename)
 
