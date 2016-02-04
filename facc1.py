@@ -59,6 +59,8 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
         if recovery_state is not None:
             continue
 
+        xuxian.remember(args.task_id, trec_id)
+
         if is_a_new_record:
             try:
                 html_data = tp.preprocess(record.payload)
@@ -67,7 +69,7 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
                 sentences = tp.get_sentences_from_html_v2(html_data, nlpobj)
                 is_a_new_record = False
             except:
-                logerr.info("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))) + "\n")
+                logerr.info("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))))
                 continue
 
         if freebase_id in entity_set:
@@ -79,12 +81,12 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
         try:
             sentence = max((s for s in sentences if entity_name in s), key=len)
         except ValueError:
-            logerr.info(line.strip() + "\tentity_not_found\n")
+            logerr.info(line.strip() + "\tentity_not_found")
             continue
 
         logout.info("\t".join(x for x in (
             trec_id, entity_name, freebase_id, re.sub(r'\t', u' ', sentence).encode('utf-8')
-            )) + "\n")
+            )))
 
 if __name__ == "__main__":
     xuxian.parse_args()
