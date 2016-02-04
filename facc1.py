@@ -16,6 +16,7 @@ parser.add_argument('--facc1-file', required=True)
 parser.add_argument('--clueweb-file', required=True)
 parser.add_argument('--output-file', required=True)
 parser.add_argument('--error-file', required=True)
+parser.add_argument('--task-id', required=True)
 
 def process_facc1_with_filename(args):
     facc1_obj = open(args.facc1_file, 'rb')
@@ -36,6 +37,8 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
     logout = xuxian.apply_dump_file('output', args.output_file)
     logerr = xuxian.apply_dump_file('error', args.error_file)
 
+    recovery_state = xuxian.recall(args.task_id)
+
     for line in facc1_obj:
         (trec_id, encoding, entity_name, entity_start, entity_end, _, __,
                 freebase_id) = line.strip().split('\t')
@@ -47,26 +50,25 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
             is_a_new_record = True
             sentences = []
 
+            if recovery_state == trec_id:
+                recovery_state = None
+
         if record is None:
             break
 
-        try:
-            if is_a_new_record:
-                is_a_new_record = False
-                html_data = tp.preprocess(record.payload)
+        if recovery_state is not None:
+            continue
 
+        if is_a_new_record:
+            try:
+                html_data = tp.preprocess(record.payload)
                 # each time a new html file is parsed, a new entity_set must be presented.
                 entity_set.clear()
-
-                #logerr.flush()
-                #logout.flush()
-
                 sentences = tp.get_sentences_from_html_v2(html_data, nlpobj)
-                #tp.output_html(trec_id, html_data)
-                #tp.output_sentences(trec_id, sentences)
-        except:
-            logerr.info("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))) + "\n")
-            continue
+                is_a_new_record = False
+            except:
+                logerr.info("\t".join((line.strip(), "failed_to_get_sentences", re.sub(r'\r\n', '', html_data))) + "\n")
+                continue
 
         if freebase_id in entity_set:
             continue
