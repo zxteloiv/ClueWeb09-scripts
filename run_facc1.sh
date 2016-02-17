@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -r dump
+[ -d dump ] && rm -r dump
 mkdir -p dump/state
 
 python facc1.py \

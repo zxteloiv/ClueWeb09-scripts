@@ -45,7 +45,7 @@ def process_facc1_with_fileobj(facc1_obj, clueweb_obj):
 
         # We can iterate over the facc1 file along the clueweb09 file, because
         # these files are all organized linearly and ordered by the WARC-TREC-ID.
-        while record is not None and 'warc-trec-id' not in record or record['warc-trec-id'] != trec_id:
+        while record is not None and ('warc-trec-id' not in record or record['warc-trec-id'] != trec_id):
             record = clueweb_obj.read_record()
             is_a_new_record = True
             sentences = []
